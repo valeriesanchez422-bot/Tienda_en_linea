@@ -1,7 +1,9 @@
-Tienda_en_linea
+## Tienda_en_linea
 
 Integrantes:
+
 Valerie Sanchez
+
 Andres Suarez
 
 Descripción del problema:
