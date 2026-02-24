@@ -21,12 +21,13 @@ Ciudad destino
 Dependiendo de estas condiciones, el envío puede ser Gratis, Express o Estándar, y puede aplicarse un recargo adicional si el destino es al exterior.
 
 IPO — Diseño del Sistema
-Entradas
-Nombre	Tipo	Descripción
-monto	decimal	Valor total del pedido
-ciudad	string	Ciudad destino del pedido
-tipoCliente	string	"nuevo" o "recurrente"
-cantidadItems	int	Número de productos comprados
+| Nombre        | Tipo    | Descripción                   |
+| ------------- | ------- | ----------------------------- |
+| monto         | decimal | Valor total del pedido        |
+| ciudad        | string  | Ciudad destino del pedido     |
+| tipoCliente   | string  | "nuevo" o "recurrente"        |
+| cantidadItems | int     | Número de productos comprados |
+
 
 Proceso (Reglas de negocio)
 
@@ -46,19 +47,23 @@ Si la ciudad es "exterior" → Se suma un recargo adicional al costo de envío.
 El orden de evaluación es importante para evitar que un pedido que cumple la condición de envío gratis sea clasificado como express.
 
 Salidas
-Nombre	Tipo	Descripción
-categoria	string	Tipo de envío asignado
-costoEnvio	decimal	Valor final del envío
-mensaje	string	Mensaje mostrado al cliente
+| Nombre     | Tipo    | Descripción                 |
+| ---------- | ------- | --------------------------- |
+| categoria  | string  | Tipo de envío asignado      |
+| costoEnvio | decimal | Valor final del envío       |
+| mensaje    | string  | Mensaje mostrado al cliente |
+
 
 Tabla de Variables
-Variable	Tipo	Propósito
-monto	decimal	Almacena el valor del pedido
-ciudad	string	Guarda la ciudad destino
-tipoCliente	string	Indica si el cliente es nuevo o recurrente
-cantidadItems	int	Número de productos
-categoria	string	Guarda la categoría de envío
-costoEnvio	decimal	Guarda el costo final del envío
+| Variable      | Tipo    | Propósito                                  |
+| ------------- | ------- | ------------------------------------------ |
+| monto         | decimal | Almacena el valor del pedido               |
+| ciudad        | string  | Guarda la ciudad destino                   |
+| tipoCliente   | string  | Indica si el cliente es nuevo o recurrente |
+| cantidadItems | int     | Número de productos                        |
+| categoria     | string  | Guarda la categoría de envío               |
+| costoEnvio    | decimal | Guarda el costo final del envío            |
+
 
 Casos de Prueba
 Caso Normal
