@@ -4,7 +4,7 @@ class Tienda_en_linea
 {
     static void Main(string[] args)
     {
-        // Entradas
+        //Entradas
         Console.WriteLine("Ingrese el monto del pedido:");
         decimal monto = Convert.ToDecimal(Console.ReadLine());
 
@@ -17,11 +17,11 @@ class Tienda_en_linea
         Console.WriteLine("Ingrese la cantidad de items:");
         int cantidadItems = Convert.ToInt32(Console.ReadLine());
 
-        // Variables de salida
+        //Variables de salida
         string categoria;
         decimal costoEnvio = 0;
 
-        // Reglas de clasificación
+        //Reglas de clasificación
         if (monto >= 150000 && tipoCliente == "recurrente")
         {
             categoria = "Envío Gratis";
@@ -38,13 +38,13 @@ class Tienda_en_linea
             costoEnvio = 10000;
         }
 
-        // Costo adicional si es exterior
+        //Costo adicional si es exterior
         if (ciudad == "exterior")
         {
             costoEnvio += 50000;
         }
 
-        // Salida final
+        //Salida final
         Console.WriteLine("\n--- Resultado del Pedido ---");
         Console.WriteLine("Categoría de despacho: " + categoria);
         Console.WriteLine("Costo de envío: $" + costoEnvio);
