@@ -2,9 +2,9 @@
 
 Integrantes:
 
-Valerie Sanchez
+Valerie Sanchez Cossio
 
-Andres Suarez
+Andres Gonzalo Suarez Rios
 
 Descripción del problema:
 
