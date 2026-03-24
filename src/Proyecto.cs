@@ -27,7 +27,7 @@ namespace TiendaAvanzada
             // REQUISITO: Uso de List<T>
             List<RegistroPedido> historial = new List<RegistroPedido>();
             string opcion;
-
+            
             // REQUISITO: Uso de do-while para el menú principal
             do
             {
