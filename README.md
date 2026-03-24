@@ -1,117 +1,78 @@
-## Tienda_en_linea
+## Sistema de Gestión de Logística - Tienda en Línea
 
-Integrantes:
+**Integrantes:**
+* Valerie Sanchez Cossio
+* Andres Gonzalo Suarez Rios
 
-Valerie Sanchez Cossio
+---
 
-Andres Gonzalo Suarez Rios
+### Descripción del problema
+Una tienda en línea necesita un sistema robusto que clasifique los pedidos según reglas de negocio para determinar la categoría de despacho, el costo de envío y mantenga un registro histórico de las operaciones realizadas en la sesión.
 
-Descripción del problema:
+**El sistema evalúa:**
+* **Monto del pedido:** Define umbrales de costo y gratuidad.
+* **Tipo de cliente:** Clasificado como Nuevo o Recurrente (implementado mediante `Enum`).
+* **Cantidad de productos:** Influye en la asignación de envío Express.
+* **Destino:** Determina recargos por envíos al Exterior (implementado mediante `Enum`).
 
-Una tienda en línea necesita un sistema que clasifique los pedidos según reglas de negocio para determinar la categoría de despacho y el costo de envío.
+---
 
-El sistema evalúa:
+### IPO — Diseño del Sistema (Actualizado)
 
-Monto del pedido
+| Entrada | Tipo | Descripción |
+| :--- | :--- | :--- |
+| `monto` | `decimal` | Valor total del pedido (Validado con TryParse). |
+| `destino` | `Enum` | Selección entre Local (0) o Exterior (1). |
+| `tipoCliente` | `Enum` | Selección entre Nuevo (0) o Recurrente (1). |
+| `cantidadItems` | `int` | Número de productos (Validado con do-while). |
 
-Tipo de cliente
+#### Proceso (Reglas de Negocio)
+1. **Envío Gratis:** Si `monto` ≥ 150,000 y `tipoCliente` es Recurrente.
+2. **Envío Express:** Si no es gratis y (`cantidadItems` ≥ 5 o `monto` ≥ 300,000).
+3. **Envío Estándar:** En los demás casos.
+4. **Recargo Exterior:** Si `destino` es Exterior, se suman 50,000 al costo base calculado.
 
-Cantidad de productos
+#### Salidas
+* **Categoría:** Tipo de despacho asignado (Gratis, Express o Estándar).
+* **Costo Final:** Valor total incluyendo recargos por destino.
+* **Historial:** Registro dinámico en una `List<T>` de todos los pedidos procesados.
 
-Ciudad destino
+---
 
-Dependiendo de estas condiciones, el envío puede ser Gratis, Express o Estándar, y puede aplicarse un recargo adicional si el destino es al exterior.
+### Tabla de Variables Técnicas
+| Variable | Tipo | Propósito |
+| :--- | :--- | :--- |
+| `historial` | `List<RegistroPedido>` | Almacena los objetos de pedido en memoria. |
+| `opcion` | `string` | Controla la navegación en el menú principal. |
+| `categoria` | `string` | Guarda el nombre de la categoría de envío. |
+| `costoFinal` | `decimal` | Almacena el resultado final del cálculo monetario. |
 
-IPO — Diseño del Sistema
-| Nombre        | Tipo    | Descripción                   |
-| ------------- | ------- | ----------------------------- |
-| monto         | decimal | Valor total del pedido        |
-| ciudad        | string  | Ciudad destino del pedido     |
-| tipoCliente   | string  | "nuevo" o "recurrente"        |
-| cantidadItems | int     | Número de productos comprados |
+---
 
+### Casos de Prueba Verificados
 
-Proceso (Reglas de negocio)
+#### 1. Caso Normal (Local)
+* **Entrada:** Monto: 200,000 | Tipo: Nuevo | Items: 3 | Destino: Local
+* **Resultado:** Categoría: **ESTÁNDAR** | Costo: **10,000**
 
-Si el monto ≥ 150000 y el cliente es recurrente → Envío Gratis.
+#### 2. Caso de Promoción (Exterior)
+* **Entrada:** Monto: 150,000 | Tipo: Recurrente | Items: 1 | Destino: Exterior
+* **Resultado:** Categoría: **ENVÍO GRATIS** | Costo: **50,000** (Base 0 + Recargo 50k)
 
-Si no se cumple lo anterior y:
+#### 3. Caso de Volumen (Express)
+* **Entrada:** Monto: 50,000 | Tipo: Nuevo | Items: 6 | Destino: Local
+* **Resultado:** Categoría: **EXPRESS** | Costo: **20,000**
 
-cantidadItems ≥ 5 o
+---
 
-monto ≥ 300000
-→ Envío Express.
+### Instrucciones para Compilar y Ejecutar
 
-En los demás casos → Envío Estándar.
-
-Si la ciudad es "exterior" → Se suma un recargo adicional al costo de envío.
-
-El orden de evaluación es importante para evitar que un pedido que cumple la condición de envío gratis sea clasificado como express.
-
-Salidas
-| Nombre     | Tipo    | Descripción                 |
-| ---------- | ------- | --------------------------- |
-| categoria  | string  | Tipo de envío asignado      |
-| costoEnvio | decimal | Valor final del envío       |
-| mensaje    | string  | Mensaje mostrado al cliente |
-
-
-Tabla de Variables
-| Variable      | Tipo    | Propósito                                  |
-| ------------- | ------- | ------------------------------------------ |
-| monto         | decimal | Almacena el valor del pedido               |
-| ciudad        | string  | Guarda la ciudad destino                   |
-| tipoCliente   | string  | Indica si el cliente es nuevo o recurrente |
-| cantidadItems | int     | Número de productos                        |
-| categoria     | string  | Guarda la categoría de envío               |
-| costoEnvio    | decimal | Guarda el costo final del envío            |
-
-
-Casos de Prueba
-Caso Normal
-
-Entrada:
-
-monto: 200000
-
-tipoCliente: nuevo
-
-cantidadItems: 3
-
-ciudad: medellin
-
-Resultado esperado:
-
-Categoría: Envío Estándar
-
-Costo: 10000
-
-Caso Borde
-
-Entrada:
-
-monto: 150000
-
-tipoCliente: recurrente
-
-cantidadItems: 1
-
-ciudad: exterior
-
-Resultado esperado:
-
-Categoría: Envío Gratis
-
-Costo: 50000 (recargo por exterior)
-
-Instrucciones para Compilar y Ejecutar
-
-Abrir el proyecto en Visual Studio o VS Code.
-
-Verificar que el archivo se llame Tienda_en_linea.cs.
-
-Compilar el programa.
-
-Ejecutar en consola.
-
-Ingresar los datos solicitados.
+1. **Entorno:** Abra el proyecto en **Visual Studio**, **VS Code** (con SDK de .NET) o compiladores online como **.NET Fiddle**.
+2. **Archivo:** Asegúrese de que el archivo contenga la estructura de clases y métodos de validación propuestos.
+3. **Compilación:** Ejecute el programa (F5 o botón Run).
+4. **Uso del Sistema:**
+   * El programa presenta un **Menú Principal** interactivo.
+   * Presione **1** para registrar un pedido. El sistema usará `TryParse` y `do-while` para asegurar que los datos ingresados sean válidos y positivos.
+   * Presione **2** para listar el historial de todos los pedidos realizados durante la ejecución actual.
+   * Presione **3** para cerrar la aplicación de forma segura.
+   * 
