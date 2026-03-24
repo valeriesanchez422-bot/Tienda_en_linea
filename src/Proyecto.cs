@@ -57,8 +57,8 @@ namespace TiendaAvanzada
 
             } while (opcion != "3");
         }
-
-        static void ProcesarNuevoPedido(List<RegistroPedido> historial)
+        
+    static void ProcesarNuevoPedido(List<RegistroPedido> historial)
         {
             // REQUISITO: Uso de TryParse y do-while en los métodos de lectura
             decimal monto = LeerDecimal("Ingrese el monto del pedido:");
