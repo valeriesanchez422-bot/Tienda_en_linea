@@ -75,4 +75,4 @@ Una tienda en línea necesita un sistema robusto que clasifique los pedidos seg�
    * Presione **1** para registrar un pedido. El sistema usará `TryParse` y `do-while` para asegurar que los datos ingresados sean válidos y positivos.
    * Presione **2** para listar el historial de todos los pedidos realizados durante la ejecución actual.
    * Presione **3** para cerrar la aplicación de forma segura.
-   * 
+     
