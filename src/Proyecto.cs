@@ -1,16 +1,21 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace TiendaAvanzada
 {
-    // Definimos tipos fijos para evitar errores de texto libre
     public enum TipoCliente { Nuevo, Recurrente }
     public enum Destino { Local, Exterior }
 
+    // Clase para representar un pedido en el historial
+    public class RegistroPedido
+    {
+        public string Categoria { get; set; }
+        public decimal Costo { get; set; }
+        public DateTime Fecha { get; set; }
+    }
+
     class TiendaEnLinea
     {
-        // Constantes con nombres claros
         const decimal UMBRAL_GRATIS = 150000;
         const decimal UMBRAL_EXPRESS = 300000;
         const decimal COSTO_ESTANDAR = 10000;
@@ -19,21 +24,60 @@ namespace TiendaAvanzada
 
         static void Main(string[] args)
         {
-            Console.Title = "Sistema de Gestión de Envíos v2.0";
+            // REQUISITO: Uso de List<T>
+            List<RegistroPedido> historial = new List<RegistroPedido>();
+            string opcion;
 
-            // 1. Captura de datos con validación estricta
+            // REQUISITO: Uso de do-while para el menú principal
+            do
+            {
+                Console.WriteLine("\n--- SISTEMA DE GESTIÓN DE ENVÍOS v2.0 ---");
+                Console.WriteLine("1. Registrar nuevo pedido");
+                Console.WriteLine("2. Ver historial de pedidos");
+                Console.WriteLine("3. Salir");
+                Console.Write("Seleccione una opción: ");
+                opcion = Console.ReadLine();
+
+                // REQUISITO: Uso de switch para las opciones
+                switch (opcion)
+                {
+                    case "1":
+                        ProcesarNuevoPedido(historial);
+                        break;
+                    case "2":
+                        MostrarHistorial(historial);
+                        break;
+                    case "3":
+                        Console.WriteLine("Saliendo del programa...");
+                        break;
+                    default:
+                        Console.WriteLine("Opción inválida. Intente de nuevo.");
+                        break;
+                }
+
+            } while (opcion != "3");
+        }
+
+        static void ProcesarNuevoPedido(List<RegistroPedido> historial)
+        {
+            // REQUISITO: Uso de TryParse y do-while en los métodos de lectura
             decimal monto = LeerDecimal("Ingrese el monto del pedido:");
             Destino destino = LeerEnum<Destino>("Seleccione el destino (0: Local, 1: Exterior):");
             TipoCliente tipo = LeerEnum<TipoCliente>("Tipo de cliente (0: Nuevo, 1: Recurrente):");
             int cantidadItems = LeerEntero("Ingrese la cantidad de items:");
 
-            // 2. Lógica de Negocio
             var (categoria, costoBase) = CalcularLogistica(monto, tipo, cantidadItems);
             
             decimal costoFinal = costoBase;
             if (destino == Destino.Exterior) costoFinal += COSTO_EXTERIOR;
 
-            // 3. Salida Formateada
+            // Guardar en el historial
+            historial.Add(new RegistroPedido { 
+                Categoria = categoria, 
+                Costo = costoFinal, 
+                Fecha = DateTime.Now 
+            });
+
             MostrarResumen(categoria, costoFinal);
         }
 
@@ -48,65 +92,69 @@ namespace TiendaAvanzada
             return ("Envío Estándar", COSTO_ESTANDAR);
         }
 
-        #region Métodos de Lectura Robusta
-
-        static T LeerEnum<T>(string mensaje) where T : struct, Enum
-        {
-            Console.WriteLine($"\n{mensaje}");
-            T resultado;
-            // Solo acepta si el número o nombre corresponde a un valor real del Enum
-            while (!Enum.TryParse(Console.ReadLine(), true, out resultado) || !Enum.IsDefined(typeof(T), resultado))
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"Error: Por favor seleccione una opción válida de {typeof(T).Name}.");
-                Console.ResetColor();
-            }
-            return resultado;
-        }
+        #region Métodos de Lectura con do-while y TryParse
 
         static decimal LeerDecimal(string mensaje)
         {
             decimal valor;
-            Console.WriteLine(mensaje);
-            while (!decimal.TryParse(Console.ReadLine(), out valor) || valor < 0)
+            bool esValido;
+            do
             {
-                Console.WriteLine("Entrada inválida. Ingrese un número decimal positivo:");
-            }
+                Console.WriteLine(mensaje);
+                esValido = decimal.TryParse(Console.ReadLine(), out valor) && valor >= 0;
+                if (!esValido) Console.WriteLine("ERROR: Ingrese un monto decimal positivo.");
+            } while (!esValido);
             return valor;
         }
 
         static int LeerEntero(string mensaje)
         {
             int valor;
-            Console.WriteLine(mensaje);
-            while (!int.TryParse(Console.ReadLine(), out valor) || valor < 0)
+            bool esValido;
+            do
             {
-                Console.WriteLine("Entrada inválida. Ingrese un número entero positivo:");
-            }
+                Console.WriteLine(mensaje);
+                esValido = int.TryParse(Console.ReadLine(), out valor) && valor >= 0;
+                if (!esValido) Console.WriteLine("ERROR: Ingrese un número entero positivo.");
+            } while (!esValido);
             return valor;
         }
 
-        static void MostrarResumen(string cat, decimal costo)
+        static T LeerEnum<T>(string mensaje) where T : struct, Enum
         {
-            Console.WriteLine("\n" + new string('=', 30));
-            Console.WriteLine("      RESUMEN DEL PEDIDO");
-            Console.WriteLine(new string('=', 30));
-            Console.WriteLine($"Categoría: {cat.ToUpper()}");
-            Console.WriteLine($"Costo Total: {costo:C0}"); // C0 formatea como moneda local
-            
-            if (costo == 0)
+            T resultado;
+            bool esValido;
+            do
             {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("¡Promoción aplicada: Envío sin costo!");
-            }
-            else
-            {
-                Console.WriteLine("Gracias por preferirnos.");
-            }
-            Console.ResetColor();
-            Console.WriteLine(new string('=', 30));
-            Console.ReadKey();
+                Console.WriteLine(mensaje);
+                string entrada = Console.ReadLine();
+                esValido = Enum.TryParse(entrada, true, out resultado) && Enum.IsDefined(typeof(T), resultado);
+                if (!esValido) Console.WriteLine($"ERROR: Opción no válida para {typeof(T).Name}.");
+            } while (!esValido);
+            return resultado;
         }
         #endregion
+
+        static void MostrarResumen(string cat, decimal costo)
+        {
+            Console.WriteLine("\n==============================");
+            Console.WriteLine("      RESUMEN DEL PEDIDO");
+            Console.WriteLine("==============================");
+            Console.WriteLine($"Categoría: {cat.ToUpper()}");
+            Console.WriteLine($"Costo Total: ${costo}"); 
+            if (costo == 0) Console.WriteLine("¡Promoción aplicada: Envío sin costo!");
+            Console.WriteLine("==============================\n");
+        }
+
+        static void MostrarHistorial(List<RegistroPedido> historial)
+        {
+            Console.WriteLine("\n--- HISTORIAL DE PEDIDOS ---");
+            if (historial.Count == 0) Console.WriteLine("No hay pedidos registrados.");
+            
+            foreach (var p in historial)
+            {
+                Console.WriteLine($"[{p.Fecha:HH:mm:ss}] Cat: {p.Categoria} - Total: ${p.Costo}");
+            }
+        }
     }
 }
