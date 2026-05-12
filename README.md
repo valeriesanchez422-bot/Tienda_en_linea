@@ -5,7 +5,8 @@ Este repositorio contiene una aplicación en C# para gestionar pedidos y su log�
 ---
 
 ## Integrantes
-Valerie Sánchez Cossio 
+Valerie Sánchez Cossio
+
 Andrés Gonzalo Suárez Rios
 
 ---
