@@ -28,7 +28,7 @@ El código está organizado en módulos claros:
 
 | Carpeta | Archivo | Descripción |
 |---------|---------|-------------|
-| `Models` | `Enums.cs` | Define los tipos `TipoCliente` y `Destino`. |
+| `Models` | `ResultadoPedido.cs` | Define los tipos `TipoCliente` y `Destino`. |
 | `Models` | `RegistroPedido.cs` | Modelo para almacenar pedidos en historial. |
 | `Services` | `LogisticaService.cs` | Contiene lógica de cálculo (categoría y costo). |
 | `Services` | `HistorialService.cs` | Controla el registro de pedidos en la lista historial. |
