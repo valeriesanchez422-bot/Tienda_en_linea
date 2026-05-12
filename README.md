@@ -30,8 +30,8 @@ El código está organizado en módulos claros:
 |---------|---------|-------------|
 | `Models` | `ResultadoPedido.cs` | Define los tipos `TipoCliente` y `Destino`. |
 | `Models` | `Pedido.cs` | Modelo para almacenar pedidos en historial. |
-| `Services` | `LogisticaService.cs` | Contiene lógica de cálculo (categoría y costo). |
-| `Services` | `HistorialService.cs` | Controla el registro de pedidos en la lista historial. |
+| `Services` | `CalculoService.cs` | Contiene lógica de cálculo (categoría y costo). |
+| `Services` | `PedidoController.cs` | Controla el registro de pedidos en la lista historial. |
 | `UI` | `ConsolaUI.cs` | Interacción con el usuario y menú principal. |
 | *Raíz* | `Program.cs` | Punto de entrada que orquesta el flujo. |
 
